@@ -1,0 +1,421 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0AC5685D47B2C0F38C9CFA2E /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF5188BE3D6DC369CB426CF /* MainTabView.swift */; };
+		129DDA87CE421B1353DA9053 /* SDRDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2477E1AEFE25D0FF6D02AABB /* SDRDashboardView.swift */; };
+		2C57788C038A46A858B00155 /* RTLSDRDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE136C21B8462DDA594FEC3 /* RTLSDRDevice.swift */; };
+		2F9794D8686BB45C45163D63 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AD1061D5F0C6CA3ED650EA /* AppDelegate.swift */; };
+		323656FD977D74F4C8C815AA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEEF4684192BE121E152FAB /* SettingsView.swift */; };
+		6218DA66DB481D07EF3EFD16 /* SDRHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBBAEDAE492361859A9FE19 /* SDRHelpView.swift */; };
+		76297AF4945AB171EAD20DD9 /* SDRAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D0F21D28D5C2ADA219242D /* SDRAudioEngine.swift */; };
+		79FE59E441A74F816767F31D /* GetSDRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000EAEB43CA38607FF319F74 /* GetSDRView.swift */; };
+		C06A5267206E07FBE90ADEBC /* Data+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22666771C779CCFD5C0C0ED8 /* Data+Hex.swift */; };
+		C7CEAD3D8D98B52A2CAD2F66 /* SignalClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E689607DEA73A797636CAA1 /* SignalClassifier.swift */; };
+		CA4FEDFAF57EDF71018639D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C9A702BFD0768D984EC18D5 /* Assets.xcassets */; };
+		F42708590F7D16ECF6010A66 /* SpektraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081DD4AC629AB8C53C224B49 /* SpektraApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		000EAEB43CA38607FF319F74 /* GetSDRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSDRView.swift; sourceTree = "<group>"; };
+		081DD4AC629AB8C53C224B49 /* SpektraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpektraApp.swift; sourceTree = "<group>"; };
+		0AE136C21B8462DDA594FEC3 /* RTLSDRDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTLSDRDevice.swift; sourceTree = "<group>"; };
+		22666771C779CCFD5C0C0ED8 /* Data+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Hex.swift"; sourceTree = "<group>"; };
+		2477E1AEFE25D0FF6D02AABB /* SDRDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDRDashboardView.swift; sourceTree = "<group>"; };
+		2E689607DEA73A797636CAA1 /* SignalClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalClassifier.swift; sourceTree = "<group>"; };
+		49924E4FFB2A6846EE90CB4B /* Spektra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spektra.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C9A702BFD0768D984EC18D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6BBBAEDAE492361859A9FE19 /* SDRHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDRHelpView.swift; sourceTree = "<group>"; };
+		A0AD1061D5F0C6CA3ED650EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		CBEEF4684192BE121E152FAB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D9D0F21D28D5C2ADA219242D /* SDRAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDRAudioEngine.swift; sourceTree = "<group>"; };
+		EEF5188BE3D6DC369CB426CF /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FF76644469CE368D62BA827C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1629A7FC1CDE25314C9299F0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5C9A702BFD0768D984EC18D5 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1B3F515D6F753C72C020D494 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				EEF5188BE3D6DC369CB426CF /* MainTabView.swift */,
+				CBEEF4684192BE121E152FAB /* SettingsView.swift */,
+				3126B33B264F0580B6B7D834 /* SDR */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2902B33684C2214196FCB7E1 /* SDR */ = {
+			isa = PBXGroup;
+			children = (
+				0AE136C21B8462DDA594FEC3 /* RTLSDRDevice.swift */,
+				D9D0F21D28D5C2ADA219242D /* SDRAudioEngine.swift */,
+				2E689607DEA73A797636CAA1 /* SignalClassifier.swift */,
+			);
+			path = SDR;
+			sourceTree = "<group>";
+		};
+		3126B33B264F0580B6B7D834 /* SDR */ = {
+			isa = PBXGroup;
+			children = (
+				000EAEB43CA38607FF319F74 /* GetSDRView.swift */,
+				2477E1AEFE25D0FF6D02AABB /* SDRDashboardView.swift */,
+				6BBBAEDAE492361859A9FE19 /* SDRHelpView.swift */,
+			);
+			path = SDR;
+			sourceTree = "<group>";
+		};
+		3315FBB6B885FD918B5EB3F5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				22666771C779CCFD5C0C0ED8 /* Data+Hex.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		586803EF3EEDDB6484551736 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				49924E4FFB2A6846EE90CB4B /* Spektra.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6993A4D3D07909591D9F1BAD /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A0AD1061D5F0C6CA3ED650EA /* AppDelegate.swift */,
+				081DD4AC629AB8C53C224B49 /* SpektraApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		BDEACC0BBD2CA548AC307E7B /* Spektra */ = {
+			isa = PBXGroup;
+			children = (
+				6993A4D3D07909591D9F1BAD /* App */,
+				3315FBB6B885FD918B5EB3F5 /* Extensions */,
+				1629A7FC1CDE25314C9299F0 /* Resources */,
+				FC5DB6EC00BC30A0392B633C /* Services */,
+				1B3F515D6F753C72C020D494 /* Views */,
+			);
+			path = Spektra;
+			sourceTree = "<group>";
+		};
+		EDFCE10C179E5113D69C0BFD = {
+			isa = PBXGroup;
+			children = (
+				BDEACC0BBD2CA548AC307E7B /* Spektra */,
+				586803EF3EEDDB6484551736 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FC5DB6EC00BC30A0392B633C /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				2902B33684C2214196FCB7E1 /* SDR */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3AC192947DB2FAD63AFCCAEB /* Spektra */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 92C0E02BDF2B11A44FB6CEE3 /* Build configuration list for PBXNativeTarget "Spektra" */;
+			buildPhases = (
+				1A3C2C2CE9A2E2A4092BEFDA /* Sources */,
+				4773642E325107803168F664 /* Resources */,
+				FF76644469CE368D62BA827C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Spektra;
+			packageProductDependencies = (
+			);
+			productName = Spektra;
+			productReference = 49924E4FFB2A6846EE90CB4B /* Spektra.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		22BC19AFE2E41D11EAB9B152 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					3AC192947DB2FAD63AFCCAEB = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 052E4DE879983D4876D8EDFC /* Build configuration list for PBXProject "Spektra" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = EDFCE10C179E5113D69C0BFD;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 586803EF3EEDDB6484551736 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3AC192947DB2FAD63AFCCAEB /* Spektra */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4773642E325107803168F664 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CA4FEDFAF57EDF71018639D2 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1A3C2C2CE9A2E2A4092BEFDA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F9794D8686BB45C45163D63 /* AppDelegate.swift in Sources */,
+				C06A5267206E07FBE90ADEBC /* Data+Hex.swift in Sources */,
+				79FE59E441A74F816767F31D /* GetSDRView.swift in Sources */,
+				0AC5685D47B2C0F38C9CFA2E /* MainTabView.swift in Sources */,
+				2C57788C038A46A858B00155 /* RTLSDRDevice.swift in Sources */,
+				76297AF4945AB171EAD20DD9 /* SDRAudioEngine.swift in Sources */,
+				129DDA87CE421B1353DA9053 /* SDRDashboardView.swift in Sources */,
+				6218DA66DB481D07EF3EFD16 /* SDRHelpView.swift in Sources */,
+				323656FD977D74F4C8C815AA /* SettingsView.swift in Sources */,
+				C7CEAD3D8D98B52A2CAD2F66 /* SignalClassifier.swift in Sources */,
+				F42708590F7D16ECF6010A66 /* SpektraApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1E3A2E623B380B42FBBC6209 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9A075199B2BB5810E922129E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Spektra.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = /opt/homebrew/include;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/lib;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				OTHER_LDFLAGS = "-lrtlsdr";
+				PRODUCT_BUNDLE_IDENTIFIER = com.subversivesoftware.Spektra;
+				SDKROOT = macosx;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/CRtlSdr";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		CA4C3559396242A8B52C6B26 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Spektra.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = /opt/homebrew/include;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/lib;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				OTHER_LDFLAGS = "-lrtlsdr";
+				PRODUCT_BUNDLE_IDENTIFIER = com.subversivesoftware.Spektra;
+				SDKROOT = macosx;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/CRtlSdr";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D37175F05170BBD289EE74E4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		052E4DE879983D4876D8EDFC /* Build configuration list for PBXProject "Spektra" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E3A2E623B380B42FBBC6209 /* Debug */,
+				D37175F05170BBD289EE74E4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		92C0E02BDF2B11A44FB6CEE3 /* Build configuration list for PBXNativeTarget "Spektra" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CA4C3559396242A8B52C6B26 /* Debug */,
+				9A075199B2BB5810E922129E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 22BC19AFE2E41D11EAB9B152 /* Project object */;
+}

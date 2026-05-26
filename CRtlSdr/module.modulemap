@@ -1,0 +1,5 @@
+module CRtlSdr [system] {
+    header "/opt/homebrew/include/rtl-sdr.h"
+    link "rtlsdr"
+    export *
+}

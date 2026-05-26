@@ -136,20 +136,29 @@ struct SDRHelpView: View {
                 freqRefHeader
                 Divider()
                 freqRefRow("FM Radio", "88–108 MHz", "FM", "Always")
-                freqRefRow("Aircraft VHF", "118–137 MHz", "AM", "Near airports")
+                freqRefRow("Air Traffic Control", "118–137 MHz", "AM", "Near airports")
                 freqRefRow("NOAA Satellites", "137.1–137.9 MHz", "FM", "During passes")
                 freqRefRow("APRS", "144.390 MHz", "FM", "Ham digital")
                 freqRefRow("Amateur 2m", "144–148 MHz", "FM", "Varies")
+                freqRefRow("MURS", "151.8–154.6 MHz", "FM", "Business/farm")
+                freqRefRow("Public Safety VHF", "150–174 MHz", "FM", "Police/fire")
                 freqRefRow("Marine VHF", "156–162 MHz", "FM", "Near water")
+                freqRefRow("Railroad", "160.1–161.6 MHz", "FM", "Near tracks")
                 freqRefRow("AIS Ships", "161.975 MHz", "FM", "Near water")
                 freqRefRow("NOAA Weather", "162.4–162.55 MHz", "FM", "Always")
-                freqRefRow("Railroad", "160.1–161.6 MHz", "FM", "Near tracks")
                 freqRefRow("Radiosondes", "400–406 MHz", "FM", "Twice daily")
-                freqRefRow("ISM 433", "433–435 MHz", "-", "IoT devices")
+                freqRefRow("ISM 433", "433–435 MHz", "-", "IoT/key fobs")
+                freqRefRow("Public Safety UHF", "450–470 MHz", "FM", "Police/fire")
                 freqRefRow("FRS/GMRS", "462–467 MHz", "FM", "Events")
+                freqRefRow("Wireless Mics", "470–698 MHz", "FM", "Events/venues")
+                freqRefRow("Trunked 800", "851–869 MHz", "FM", "Police/fire")
+                freqRefRow("Wireless Cameras", "900–930 MHz", "-", "Surveillance")
                 freqRefRow("Pagers", "929–931 MHz", "-", "Hospitals")
+                freqRefRow("ISM 915", "902–928 MHz", "-", "LoRa/meters")
                 freqRefRow("ADS-B", "1090 MHz", "AM", "Flight paths")
+                freqRefRow("1.2 GHz Cameras", "1240–1300 MHz", "-", "Surveillance")
                 freqRefRow("Hydrogen Line", "1420.4 MHz", "-", "Astronomy")
+                freqRefRow("GPS L1", "1575.42 MHz", "-", "Jammer check")
                 freqRefRow("Inmarsat", "1537–1545 MHz", "-", "Geostationary")
                 freqRefRow("GOES LRIT", "1694.1 MHz", "-", "Geostationary")
             }
@@ -445,6 +454,59 @@ struct SDRActivity: Identifiable {
             ]
         ),
         SDRActivity(
+            name: "Police/Fire Scanner",
+            icon: "staroflife", color: .red,
+            difficulty: .beginner, demod: "FM",
+            description: "Many police, fire, and EMS agencies still use analog FM on VHF (150–174 MHz) and UHF (450–470 MHz). Trunked digital systems on 800 MHz show activity even if you can't decode voice.",
+            frequencies: [
+                (label: "VHF Public Safety", value: "150–174 MHz"),
+                (label: "UHF Public Safety", value: "450–470 MHz"),
+                (label: "Federal agencies", value: "162–174 MHz"),
+            ],
+            howTo: [
+                "Select the \"Public Safety VHF\" preset (155.475 MHz)",
+                "Scan with 12.5 kHz steps — channels are closely spaced",
+                "Search radioreference.com for your local frequencies",
+                "UHF (450–470 MHz) often carries more active channels",
+                "Digital P25 sounds like harsh static — you'll see it on the spectrum but can't demod in-app",
+            ]
+        ),
+        SDRActivity(
+            name: "Trunked Radio (800 MHz)",
+            icon: "antenna.radiowaves.left.and.right.circle", color: .red,
+            difficulty: .intermediate, demod: "FM (digital)",
+            description: "Many large police and fire departments use trunked systems on 851–869 MHz. These multiplex many talk groups onto shared frequencies. You'll see bursts of activity hopping across channels.",
+            frequencies: [
+                (label: "Trunked band", value: "851–869 MHz"),
+                (label: "Control channels", value: "Varies by system"),
+            ],
+            howTo: [
+                "Select the \"Trunked 800 MHz\" preset (860 MHz)",
+                "Zoom to 2x to see the full 800 MHz band",
+                "You'll see brief digital bursts jumping across frequencies",
+                "Control channels are always-on — look for a persistent signal",
+                "Decoding requires trunk-recorder or SDR Trunk software",
+            ]
+        ),
+        SDRActivity(
+            name: "MURS (Multi-Use Radio)",
+            icon: "building.2.fill", color: .mint,
+            difficulty: .beginner, demod: "FM",
+            description: "Five license-free channels used by farms, businesses, security guards, and parking lots. Low power (2W) so signals are local. Hearing MURS activity tells you about nearby commercial operations.",
+            frequencies: [
+                (label: "MURS 1", value: "151.820 MHz"),
+                (label: "MURS 2", value: "151.880 MHz"),
+                (label: "MURS 3", value: "151.940 MHz"),
+                (label: "MURS 4", value: "154.570 MHz"),
+                (label: "MURS 5", value: "154.600 MHz"),
+            ],
+            howTo: [
+                "Select the \"MURS\" preset (151.940 MHz)",
+                "Check all five channels — they're spread across two sub-bands",
+                "Common near retail stores (Walmart uses MURS), farms, and events",
+            ]
+        ),
+        SDRActivity(
             name: "ISM Band Devices",
             icon: "sensor.fill", color: .yellow,
             difficulty: .intermediate, demod: "Various",
@@ -506,6 +568,75 @@ struct SDRActivity: Identifiable {
                 "Tune to 929.000 MHz and scan upward in 25 kHz steps",
                 "You'll hear rapid beeping/chirping (digital data)",
                 "Note: pager traffic is unencrypted — a known privacy issue",
+            ]
+        ),
+        SDRActivity(
+            name: "Surveillance Sweep",
+            icon: "video.fill", color: .red,
+            difficulty: .intermediate, demod: "FM",
+            description: "Detect analog wireless cameras that transmit on 900 MHz or 1.2 GHz. A persistent wideband signal in these bands in a hotel room, AirBnB, or private space could indicate a hidden camera.",
+            frequencies: [
+                (label: "900 MHz cameras", value: "900–930 MHz"),
+                (label: "1.2 GHz cameras", value: "1240–1300 MHz"),
+                (label: "Baby monitors", value: "900 MHz band"),
+            ],
+            howTo: [
+                "Select the \"Surveillance 900\" preset (910 MHz)",
+                "Look for persistent wideband signals (wider than 50 kHz)",
+                "A wireless camera appears as a constant, wide hump",
+                "Walk around the space — signal gets stronger near the camera",
+                "Also check 1240–1300 MHz for 1.2 GHz cameras",
+                "Digital/IP cameras use WiFi and won't appear here",
+            ]
+        ),
+        SDRActivity(
+            name: "Wireless Microphones",
+            icon: "mic.fill", color: .indigo,
+            difficulty: .intermediate, demod: "FM",
+            description: "Wireless microphones operate in the 470–698 MHz band (former TV channels). Normal at events and venues — unexpected in a private setting.",
+            frequencies: [
+                (label: "Wireless mic band", value: "470–698 MHz"),
+                (label: "Common range", value: "500–600 MHz"),
+            ],
+            howTo: [
+                "Tune to 550 MHz and scan with 100 kHz steps",
+                "Wireless mics appear as narrow FM signals",
+                "Active ones carry continuous audio when in use",
+                "Listen with FM demod to hear what's being picked up",
+            ]
+        ),
+        SDRActivity(
+            name: "GPS Jammer Detection",
+            icon: "exclamationmark.triangle.fill", color: .red,
+            difficulty: .intermediate, demod: "None (spectrum only)",
+            description: "GPS signals at 1575.42 MHz are extremely weak (below noise floor). Any strong wideband signal at this frequency is anomalous and could indicate a GPS jammer nearby — used by vehicle thieves and to defeat tracking.",
+            frequencies: [
+                (label: "GPS L1", value: "1575.42 MHz"),
+            ],
+            howTo: [
+                "Select the \"GPS L1\" preset",
+                "Normal: you should see flat noise (GPS signals are too weak to see)",
+                "Anomalous: a wideband hump or spike means local interference",
+                "GPS jammers produce a characteristic wide noise dome",
+                "Check near parking lots or if your phone GPS is acting up",
+            ]
+        ),
+        SDRActivity(
+            name: "Drone Detection",
+            icon: "arrow.triangle.swap", color: .orange,
+            difficulty: .advanced, demod: "Various",
+            description: "Most consumer drones (DJI) use 2.4/5.8 GHz — out of RTL-SDR range. But some long-range systems (Crossfire, ExpressLRS) use 900 MHz, and telemetry links may appear at 433 MHz. Bursty digital signals in these bands near you could indicate a drone.",
+            frequencies: [
+                (label: "900 MHz control", value: "868–915 MHz"),
+                (label: "433 MHz telemetry", value: "433 MHz ISM"),
+                (label: "FPV analog video", value: "1.2–1.3 GHz"),
+            ],
+            howTo: [
+                "Check ISM 915 and ISM 433 presets",
+                "Drone links appear as periodic digital bursts",
+                "900 MHz links are typically wider bandwidth than IoT devices",
+                "1.2 GHz analog FPV video looks like a wide continuous signal",
+                "Consumer DJI drones are NOT detectable with RTL-SDR",
             ]
         ),
         SDRActivity(

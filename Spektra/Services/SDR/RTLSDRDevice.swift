@@ -115,14 +115,20 @@ final class RTLSDRDevice: NSObject {
 
     static let presets: [FrequencyPreset] = [
         FrequencyPreset(name: "FM Radio", frequency: 100_000_000, icon: "radio"),
-        FrequencyPreset(name: "Aircraft (ADS-B)", frequency: 1_090_000_000, icon: "airplane"),
-        FrequencyPreset(name: "Marine VHF", frequency: 156_800_000, icon: "ferry"),
-        FrequencyPreset(name: "NOAA Weather", frequency: 162_475_000, icon: "cloud.sun"),
+        FrequencyPreset(name: "Air Traffic Control", frequency: 121_500_000, icon: "tower.broadcast"),
         FrequencyPreset(name: "Amateur 2m", frequency: 146_000_000, icon: "person.wave.2"),
-        FrequencyPreset(name: "Amateur 70cm", frequency: 440_000_000, icon: "person.wave.2"),
+        FrequencyPreset(name: "MURS", frequency: 151_940_000, icon: "building.2.fill"),
+        FrequencyPreset(name: "Public Safety VHF", frequency: 155_475_000, icon: "staroflife"),
+        FrequencyPreset(name: "Marine VHF", frequency: 156_800_000, icon: "ferry"),
+        FrequencyPreset(name: "Railroad", frequency: 160_500_000, icon: "tram"),
+        FrequencyPreset(name: "NOAA Weather", frequency: 162_475_000, icon: "cloud.sun"),
         FrequencyPreset(name: "ISM 433 MHz", frequency: 433_920_000, icon: "sensor.fill"),
-        FrequencyPreset(name: "ISM 915 MHz", frequency: 915_000_000, icon: "sensor.fill"),
+        FrequencyPreset(name: "Amateur 70cm", frequency: 440_000_000, icon: "person.wave.2"),
         FrequencyPreset(name: "FRS/GMRS", frequency: 462_562_500, icon: "walkie.talkie.radio"),
+        FrequencyPreset(name: "Trunked 800 MHz", frequency: 860_000_000, icon: "antenna.radiowaves.left.and.right.circle"),
+        FrequencyPreset(name: "ISM 915 MHz", frequency: 915_000_000, icon: "sensor.fill"),
+        FrequencyPreset(name: "Surveillance 900", frequency: 910_000_000, icon: "video.fill"),
+        FrequencyPreset(name: "Aircraft (ADS-B)", frequency: 1_090_000_000, icon: "airplane"),
         FrequencyPreset(name: "GPS L1", frequency: 1_575_420_000, icon: "location.circle"),
     ]
 
@@ -130,7 +136,7 @@ final class RTLSDRDevice: NSObject {
 
     private var device: OpaquePointer?
     private var pollTimer: Timer?
-    private var streamQueue = DispatchQueue(label: "com.survey.sdr.stream", qos: .userInitiated)
+    private var streamQueue = DispatchQueue(label: "com.spektra.sdr.stream", qos: .userInitiated)
     private var retainedSelf: Unmanaged<RTLSDRDevice>?
 
     private let fftSize = 2048

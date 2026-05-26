@@ -400,6 +400,105 @@ Every hydrogen atom in the universe occasionally emits a photon at 1420.405 MHz 
 
 ---
 
+## 16. Police/Fire/EMS Scanner (150–174 MHz / 450–470 MHz)
+
+**Difficulty:** Beginner | **Demod:** FM | **Best near:** Any populated area
+
+Many police, fire, and EMS departments still use analog FM radio for dispatch and field communications. These fall in two main bands:
+
+- **VHF** (150–174 MHz) — older, smaller departments, federal agencies
+- **UHF** (450–470 MHz) — many city/county agencies
+
+**How to listen:**
+1. Select the "Public Safety VHF" preset (155.475 MHz)
+2. Scan with 12.5 kHz steps — channels are closely spaced
+3. Look up your local frequencies at radioreference.com
+4. Try UHF (450–470 MHz) if VHF is quiet — many agencies are there instead
+
+**Note:** Many larger departments have migrated to digital P25 trunked systems (see section 17). You'll see their transmissions on the spectrum but won't be able to demodulate voice in Spektra.
+
+---
+
+## 17. Trunked Radio Systems (851–869 MHz)
+
+**Difficulty:** Intermediate | **Demod:** FM (mostly digital)
+
+Large police, fire, and government agencies often use trunked radio systems on 800 MHz. Unlike conventional radio where each group has a fixed frequency, trunked systems dynamically assign frequencies from a shared pool. You'll see brief digital bursts jumping across the band.
+
+**How to spot them:**
+1. Select the "Trunked 800 MHz" preset (860 MHz)
+2. Zoom to 2x to see the full band
+3. Control channels appear as always-on signals — these manage the trunking
+4. Voice channels appear as brief bursts that hop around
+
+**Decoding:** Requires specialized software like trunk-recorder, SDR Trunk, or OP25 to follow the trunking protocol and extract audio.
+
+---
+
+## 18. Surveillance Sweep (900 MHz / 1.2 GHz)
+
+**Difficulty:** Intermediate | **What to look for:** Persistent wideband signals
+
+Analog wireless cameras transmit continuous video on two bands within RTL-SDR range:
+- **900 MHz** (900–930 MHz) — older wireless cameras, baby monitors
+- **1.2 GHz** (1240–1300 MHz) — some wireless cameras
+
+A persistent wideband signal (>50 kHz wide) in these bands in a hotel room, AirBnB, or office could indicate a hidden camera. Unlike IoT devices that transmit brief bursts, cameras transmit continuously.
+
+**How to sweep:**
+1. Select the "Surveillance 900" preset (910 MHz)
+2. Look for wide, continuous humps (not brief digital bursts)
+3. Walk around the room — signal strength increases near the camera
+4. Also check 1240–1300 MHz
+5. Note: Modern IP cameras use WiFi (2.4/5 GHz) and won't appear here
+
+---
+
+## 19. GPS Jammer Detection (1575 MHz)
+
+**Difficulty:** Intermediate | **What to look for:** Wideband noise dome
+
+GPS signals from satellites are incredibly weak — well below the noise floor of an RTL-SDR. Under normal conditions, you'll see nothing but flat noise at 1575.42 MHz. Any strong wideband signal here is anomalous.
+
+GPS jammers produce a characteristic wide noise dome centered on 1575 MHz. They're used by vehicle thieves to defeat tracking and by some commercial drivers to circumvent fleet monitoring. Detecting one near you could explain GPS issues on your phone or in your car.
+
+**How to check:**
+1. Select the "GPS L1" preset (1575.42 MHz)
+2. Normal: flat noise, no visible signal
+3. Anomalous: a wide hump or spike — something is deliberately interfering
+
+---
+
+## 20. Drone Detection (433 MHz / 900 MHz)
+
+**Difficulty:** Advanced | **What to look for:** Bursty digital signals
+
+Most consumer drones (DJI, etc.) use 2.4 GHz and 5.8 GHz for control and video — **out of RTL-SDR range**. However, some systems are detectable:
+
+- **433 MHz** — telemetry links on some drone platforms
+- **900 MHz** — long-range control systems like TBS Crossfire and ExpressLRS
+- **1.2–1.3 GHz** — analog FPV video downlinks
+
+Drone control links typically appear as periodic digital bursts — wider bandwidth and more regular than typical IoT devices. A 900 MHz link sending continuous data at ~500 kHz bandwidth near you, where there shouldn't be one, could indicate a drone.
+
+**Limitations:** This is probabilistic, not definitive. The 900 MHz ISM band has lots of legitimate traffic. Don't rely solely on SDR for drone detection.
+
+---
+
+## 21. Wireless Microphones (470–698 MHz)
+
+**Difficulty:** Intermediate | **Demod:** FM
+
+Wireless microphones operate in the former TV broadcast band. Normal at concerts, churches, theaters, and conference venues — unexpected in a private office or home.
+
+**How to scan:**
+1. Tune to 550 MHz and scan with 100 kHz steps
+2. Wireless mics appear as narrow FM signals
+3. Active ones carry continuous audio
+4. Listen with FM demod to hear what the microphone is picking up
+
+---
+
 ## Tips & Best Practices
 
 ### Improving Reception
@@ -430,23 +529,29 @@ Spektra automatically classifies detected signals by analyzing:
 | What | Frequency | Demod | When/Where |
 |------|-----------|-------|------------|
 | FM Radio | 88–108 MHz | FM | Always, everywhere |
-| Aircraft VHF | 118–137 MHz | AM | Near airports |
+| Air Traffic Control | 118–137 MHz | AM | Near airports |
 | NOAA Satellites | 137.1–137.9 MHz | FM | During overhead passes |
 | APRS | 144.390 MHz | FM | Amateur radio digital |
 | Amateur 2m | 144–148 MHz | FM | Varies |
-| MURS | 151.8–154.6 MHz | FM | Outdoor events |
+| MURS | 151.8–154.6 MHz | FM | Business, farm, security |
+| Public Safety VHF | 150–174 MHz | FM | Police, fire, EMS |
 | Marine VHF | 156–162 MHz | FM | Near water |
+| Railroad | 160.1–161.6 MHz | FM | Near rail lines |
 | AIS Ships | 161.975/162.025 MHz | FM | Near water |
 | NOAA Weather | 162.4–162.55 MHz | FM | Always, everywhere |
-| Railroad | 160.1–161.6 MHz | FM | Near rail lines |
 | Radiosondes | 400–406 MHz | FM | Twice daily launches |
-| ISM 433 MHz | 433.05–434.79 MHz | - | IoT devices |
+| ISM 433 MHz | 433.05–434.79 MHz | - | IoT, key fobs, drones |
 | Amateur 70cm | 420–450 MHz | FM | Varies |
+| Public Safety UHF | 450–470 MHz | FM | Police, fire, EMS |
 | FRS/GMRS | 462–467 MHz | FM | Outdoor events |
-| ISM 915 MHz | 902–928 MHz | - | IoT, smart meters |
+| Wireless Mics | 470–698 MHz | FM | Events, venues |
+| Trunked 800 MHz | 851–869 MHz | FM | Police, fire (digital) |
+| Wireless Cameras | 900–930 MHz | - | Surveillance |
+| ISM 915 MHz | 902–928 MHz | - | IoT, LoRa, smart meters |
 | Pagers | 929–931 MHz | - | Hospitals, fire/EMS |
 | ADS-B | 1090 MHz | AM | Near flight paths |
+| 1.2 GHz Cameras | 1240–1300 MHz | - | Surveillance |
 | Hydrogen Line | 1420.4 MHz | - | Milky Way visible |
 | Inmarsat | 1537–1545 MHz | - | Geostationary (south) |
-| GPS L1 | 1575.42 MHz | - | Always (very weak) |
+| GPS L1 | 1575.42 MHz | - | Jammer detection |
 | GOES LRIT | 1694.1 MHz | - | Geostationary (south) |

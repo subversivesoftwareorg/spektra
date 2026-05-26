@@ -25,7 +25,7 @@ Spektra turns a $30 RTL-SDR USB dongle into a full-featured spectrum analyzer an
 ## Getting started
 
 ```bash
-git clone <repo>
+git clone git@github.com:subversivesoftwareorg/spektra.git
 cd spektra
 open Spektra.xcodeproj
 ```
@@ -41,8 +41,6 @@ Spektra/
 ├── App/
 │   ├── SpektraApp.swift            # App entry point and menu commands
 │   └── AppDelegate.swift          # macOS About panel
-├── Extensions/
-│   └── Data+Hex.swift             # Hex conversion utilities
 ├── Resources/
 │   └── Assets.xcassets/           # App icon
 ├── Services/

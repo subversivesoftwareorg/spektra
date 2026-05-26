@@ -11,6 +11,14 @@ enum SignalType: String, CaseIterable {
     case pager = "Pager"
     case adsb = "ADS-B"
     case weatherRadio = "Weather Radio"
+    case airTrafficControl = "Air Traffic Control"
+    case publicSafety = "Public Safety"
+    case railroad = "Railroad"
+    case trunkedRadio = "Trunked Radio"
+    case wirelessMic = "Wireless Mic"
+    case surveillance = "Surveillance"
+    case murs = "MURS"
+    case gpsAnomaly = "GPS Anomaly"
     case unknown = "Unknown"
 
     var icon: String {
@@ -22,15 +30,25 @@ enum SignalType: String, CaseIterable {
         case .pager:        "bell.badge"
         case .adsb:         "airplane"
         case .weatherRadio: "cloud.sun"
+        case .airTrafficControl: "tower.broadcast"
+        case .publicSafety: "staroflife"
+        case .railroad:     "tram"
+        case .trunkedRadio: "antenna.radiowaves.left.and.right.circle"
+        case .wirelessMic:  "mic.fill"
+        case .surveillance: "video.fill"
+        case .murs:         "building.2.fill"
+        case .gpsAnomaly:   "exclamationmark.triangle.fill"
         case .unknown:      "questionmark.circle"
         }
     }
 
     var suggestedDemod: SDRAudioEngine.DemodMode {
         switch self {
-        case .fmBroadcast, .narrowbandFM, .weatherRadio, .pager: .fm
-        case .amSignal, .adsb: .am
-        case .digital, .unknown: .fm
+        case .fmBroadcast, .narrowbandFM, .weatherRadio, .pager,
+             .publicSafety, .railroad, .trunkedRadio, .wirelessMic,
+             .murs, .surveillance: .fm
+        case .amSignal, .adsb, .airTrafficControl: .am
+        case .digital, .gpsAnomaly, .unknown: .fm
         }
     }
 }
@@ -49,7 +67,7 @@ struct SignalFingerprint: Identifiable {
 // MARK: - Detected Signal
 
 struct DetectedSignal: Identifiable {
-    let id: String // stable identity from frequency
+    let id: String
     let frequencyMHz: Double
     let powerDB: Float
     let fingerprint: SignalFingerprint
@@ -63,7 +81,6 @@ struct DetectedSignal: Identifiable {
 
 struct SignalClassifier {
 
-    /// Classify a signal peak by analyzing the spectrum around it.
     func classify(
         peakFreqMHz: Double,
         spectrum: [Float],
@@ -83,7 +100,6 @@ struct SignalClassifier {
             return unknown(bwKHz: 0)
         }
 
-        // Measure -6 dB bandwidth
         let peakPower = spectrum[peakBin]
         let threshold = peakPower - 6.0
 
@@ -96,7 +112,6 @@ struct SignalClassifier {
         let binWidthMHz = bandwidthMHz / Double(fftSize)
         let signalBWkHz = Double(signalBins) * binWidthMHz * 1000.0
 
-        // Spectral flatness within the signal bandwidth
         let lo = max(0, leftBin)
         let hi = min(fftSize - 1, rightBin)
         let signalSlice = Array(spectrum[lo...hi])
@@ -128,6 +143,8 @@ struct SignalClassifier {
         flatness: Double
     ) -> SignalFingerprint {
 
+        // === Pinpoint frequency matches (most specific first) ===
+
         // ADS-B (1090 MHz)
         if freqMHz > 1088 && freqMHz < 1092 {
             return SignalFingerprint(
@@ -137,7 +154,16 @@ struct SignalClassifier {
             )
         }
 
-        // NOAA Weather Radio (162.4-162.55 MHz)
+        // GPS band anomaly — wideband energy near L1 suggests jamming or interference
+        if freqMHz > 1573 && freqMHz < 1578 && bwKHz > 100 {
+            return SignalFingerprint(
+                type: .gpsAnomaly, confidence: 0.7,
+                description: "Wideband energy in GPS L1 band — possible jammer or interference",
+                bandwidthKHz: bwKHz, suggestedDemod: .am
+            )
+        }
+
+        // NOAA Weather Radio (162.4–162.55 MHz)
         if freqMHz > 162.3 && freqMHz < 162.6 {
             return SignalFingerprint(
                 type: .weatherRadio, confidence: 0.85,
@@ -146,7 +172,7 @@ struct SignalClassifier {
             )
         }
 
-        // FM Broadcast (88-108 MHz, wide bandwidth)
+        // FM Broadcast (88–108 MHz, wide bandwidth)
         if freqMHz > 87.5 && freqMHz < 108.5 && bwKHz > 60 {
             return SignalFingerprint(
                 type: .fmBroadcast, confidence: 0.9,
@@ -155,7 +181,64 @@ struct SignalClassifier {
             )
         }
 
-        // Pager (152-158 MHz, narrow)
+        // === Band-specific classifications ===
+
+        // Air Traffic Control (118–137 MHz) — aviation uses AM
+        if freqMHz > 117.5 && freqMHz < 137.5 {
+            let desc: String
+            if freqMHz > 121.4 && freqMHz < 121.6 {
+                desc = "Aviation guard/emergency frequency (121.5 MHz)"
+            } else if freqMHz > 118 && freqMHz < 124 {
+                desc = "ATC tower or ground control"
+            } else if freqMHz > 124 && freqMHz < 132 {
+                desc = "ATC approach/departure or en-route center"
+            } else {
+                desc = "Aviation VHF communication"
+            }
+            return SignalFingerprint(
+                type: .airTrafficControl, confidence: 0.85,
+                description: desc,
+                bandwidthKHz: bwKHz, suggestedDemod: .am
+            )
+        }
+
+        // Amateur 2m (144–148 MHz)
+        if freqMHz > 143.5 && freqMHz < 148.5 && bwKHz < 30 {
+            return SignalFingerprint(
+                type: .narrowbandFM, confidence: 0.65,
+                description: "Amateur radio 2-meter band",
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // MURS (151.820–154.600 MHz) — 5 specific channels
+        if freqMHz > 151.7 && freqMHz < 154.7 && bwKHz < 30 {
+            return SignalFingerprint(
+                type: .murs, confidence: 0.7,
+                description: "Multi-Use Radio Service — business, farm, or security",
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // Railroad (160.1–161.6 MHz) — check before marine VHF
+        if freqMHz > 160.0 && freqMHz < 161.7 && bwKHz < 30 {
+            return SignalFingerprint(
+                type: .railroad, confidence: 0.75,
+                description: "Railroad crew or dispatch communication",
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // Marine VHF (156–162 MHz, excluding railroad overlap)
+        if freqMHz > 155.5 && freqMHz < 163 && bwKHz < 30 {
+            return SignalFingerprint(
+                type: .narrowbandFM, confidence: 0.7,
+                description: "Marine VHF radio",
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // Pager VHF (152–158 MHz, narrow)
         if freqMHz > 150 && freqMHz < 160 && bwKHz < 30 {
             return SignalFingerprint(
                 type: .pager, confidence: 0.6,
@@ -164,8 +247,17 @@ struct SignalClassifier {
             )
         }
 
-        // FRS/GMRS (462-467 MHz, narrowband)
-        if freqMHz > 461 && freqMHz < 468 && bwKHz < 30 {
+        // Public Safety VHF catch-all (150–174 MHz)
+        if freqMHz > 149.5 && freqMHz < 174.5 && bwKHz < 30 {
+            return SignalFingerprint(
+                type: .publicSafety, confidence: 0.6,
+                description: "VHF land mobile — likely police, fire, EMS, or government",
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // FRS/GMRS (462–467 MHz, narrowband)
+        if freqMHz > 461.5 && freqMHz < 467.5 && bwKHz < 30 {
             return SignalFingerprint(
                 type: .narrowbandFM, confidence: 0.75,
                 description: "FRS/GMRS two-way radio",
@@ -173,25 +265,7 @@ struct SignalClassifier {
             )
         }
 
-        // Marine VHF (156-162 MHz)
-        if freqMHz > 155 && freqMHz < 163 && bwKHz < 30 {
-            return SignalFingerprint(
-                type: .narrowbandFM, confidence: 0.7,
-                description: "Marine VHF radio",
-                bandwidthKHz: bwKHz, suggestedDemod: .fm
-            )
-        }
-
-        // Amateur 2m (144-148 MHz)
-        if freqMHz > 143 && freqMHz < 149 && bwKHz < 30 {
-            return SignalFingerprint(
-                type: .narrowbandFM, confidence: 0.65,
-                description: "Amateur radio 2-meter band",
-                bandwidthKHz: bwKHz, suggestedDemod: .fm
-            )
-        }
-
-        // Amateur 70cm (420-450 MHz)
+        // Amateur 70cm (420–450 MHz)
         if freqMHz > 419 && freqMHz < 451 && bwKHz < 30 {
             return SignalFingerprint(
                 type: .narrowbandFM, confidence: 0.65,
@@ -199,6 +273,65 @@ struct SignalClassifier {
                 bandwidthKHz: bwKHz, suggestedDemod: .fm
             )
         }
+
+        // Public Safety UHF catch-all (450–470 MHz)
+        if freqMHz > 449.5 && freqMHz < 470.5 && bwKHz < 30 {
+            return SignalFingerprint(
+                type: .publicSafety, confidence: 0.6,
+                description: "UHF land mobile — likely police, fire, EMS, or business",
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // Wireless microphones / TV band (470–698 MHz)
+        if freqMHz > 469 && freqMHz < 699 && bwKHz < 200 {
+            return SignalFingerprint(
+                type: .wirelessMic, confidence: 0.55,
+                description: "Wireless microphone or TV band signal",
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // Trunked radio systems (851–869 MHz) — P25, EDACS, Motorola
+        if freqMHz > 850 && freqMHz < 870 {
+            let desc = flatness > 0.4
+                ? "800 MHz trunked radio — digital (P25/DMR)"
+                : "800 MHz trunked radio — analog or control channel"
+            return SignalFingerprint(
+                type: .trunkedRadio, confidence: 0.7,
+                description: desc,
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // Pager UHF (929–932 MHz)
+        if freqMHz > 928 && freqMHz < 933 && bwKHz < 30 {
+            return SignalFingerprint(
+                type: .pager, confidence: 0.7,
+                description: "POCSAG/FLEX pager — hospital or emergency services",
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // Surveillance / wireless camera (895–930 MHz, wideband)
+        if freqMHz > 895 && freqMHz < 930 && bwKHz > 50 {
+            return SignalFingerprint(
+                type: .surveillance, confidence: 0.6,
+                description: "Wideband 900 MHz signal — possible wireless camera or analog video",
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // 1.2 GHz surveillance cameras
+        if freqMHz > 1200 && freqMHz < 1300 && bwKHz > 50 {
+            return SignalFingerprint(
+                type: .surveillance, confidence: 0.55,
+                description: "Wideband 1.2 GHz signal — possible wireless camera",
+                bandwidthKHz: bwKHz, suggestedDemod: .fm
+            )
+        }
+
+        // === Generic classifications (bandwidth + spectral shape) ===
 
         // Digital signal (flat-topped spectrum)
         if flatness > 0.55 && bwKHz > 5 {

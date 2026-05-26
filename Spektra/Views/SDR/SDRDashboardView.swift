@@ -569,14 +569,22 @@ private struct SignalRow: View {
 
     private var iconColor: Color {
         switch signal.fingerprint.type {
-        case .fmBroadcast:  .cyan
-        case .narrowbandFM: .blue
-        case .amSignal:     .orange
-        case .digital:      .purple
-        case .pager:        .pink
-        case .adsb:         .green
-        case .weatherRadio: .teal
-        case .unknown:      .secondary
+        case .fmBroadcast:        .cyan
+        case .narrowbandFM:       .blue
+        case .amSignal:           .orange
+        case .digital:            .purple
+        case .pager:              .pink
+        case .adsb:               .green
+        case .weatherRadio:       .teal
+        case .airTrafficControl:  .blue
+        case .publicSafety:       .red
+        case .railroad:           .orange
+        case .trunkedRadio:       .red
+        case .wirelessMic:        .indigo
+        case .surveillance:       .red
+        case .murs:               .mint
+        case .gpsAnomaly:         .red
+        case .unknown:            .secondary
         }
     }
 

@@ -15,7 +15,6 @@
 		6218DA66DB481D07EF3EFD16 /* SDRHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBBAEDAE492361859A9FE19 /* SDRHelpView.swift */; };
 		76297AF4945AB171EAD20DD9 /* SDRAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D0F21D28D5C2ADA219242D /* SDRAudioEngine.swift */; };
 		79FE59E441A74F816767F31D /* GetSDRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000EAEB43CA38607FF319F74 /* GetSDRView.swift */; };
-		C06A5267206E07FBE90ADEBC /* Data+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22666771C779CCFD5C0C0ED8 /* Data+Hex.swift */; };
 		C7CEAD3D8D98B52A2CAD2F66 /* SignalClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E689607DEA73A797636CAA1 /* SignalClassifier.swift */; };
 		CA4FEDFAF57EDF71018639D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C9A702BFD0768D984EC18D5 /* Assets.xcassets */; };
 		F42708590F7D16ECF6010A66 /* SpektraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081DD4AC629AB8C53C224B49 /* SpektraApp.swift */; };
@@ -25,7 +24,6 @@
 		000EAEB43CA38607FF319F74 /* GetSDRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSDRView.swift; sourceTree = "<group>"; };
 		081DD4AC629AB8C53C224B49 /* SpektraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpektraApp.swift; sourceTree = "<group>"; };
 		0AE136C21B8462DDA594FEC3 /* RTLSDRDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTLSDRDevice.swift; sourceTree = "<group>"; };
-		22666771C779CCFD5C0C0ED8 /* Data+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Hex.swift"; sourceTree = "<group>"; };
 		2477E1AEFE25D0FF6D02AABB /* SDRDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDRDashboardView.swift; sourceTree = "<group>"; };
 		2E689607DEA73A797636CAA1 /* SignalClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalClassifier.swift; sourceTree = "<group>"; };
 		49924E4FFB2A6846EE90CB4B /* Spektra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spektra.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,14 +84,6 @@
 			path = SDR;
 			sourceTree = "<group>";
 		};
-		3315FBB6B885FD918B5EB3F5 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				22666771C779CCFD5C0C0ED8 /* Data+Hex.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		586803EF3EEDDB6484551736 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -115,7 +105,6 @@
 			isa = PBXGroup;
 			children = (
 				6993A4D3D07909591D9F1BAD /* App */,
-				3315FBB6B885FD918B5EB3F5 /* Extensions */,
 				1629A7FC1CDE25314C9299F0 /* Resources */,
 				FC5DB6EC00BC30A0392B633C /* Services */,
 				1B3F515D6F753C72C020D494 /* Views */,
@@ -211,7 +200,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F9794D8686BB45C45163D63 /* AppDelegate.swift in Sources */,
-				C06A5267206E07FBE90ADEBC /* Data+Hex.swift in Sources */,
 				79FE59E441A74F816767F31D /* GetSDRView.swift in Sources */,
 				0AC5685D47B2C0F38C9CFA2E /* MainTabView.swift in Sources */,
 				2C57788C038A46A858B00155 /* RTLSDRDevice.swift in Sources */,

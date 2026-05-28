@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SDRDashboardView: View {
     @Environment(RTLSDRDevice.self) private var sdr
+    @Binding var selectedTab: Int
     @State private var showHelp = false
 
     var body: some View {
@@ -26,8 +27,6 @@ struct SDRDashboardView: View {
                 }
             }
         }
-        .onAppear { sdr.startPolling() }
-        .onDisappear { sdr.stopPolling() }
         .sheet(isPresented: $showHelp) {
             SDRHelpView()
         }
@@ -101,6 +100,7 @@ struct SDRDashboardView: View {
                 if !sdr.detectedSignals.isEmpty {
                     signalsSection
                 }
+                DecoderPreviewSection(selectedTab: $selectedTab)
             }
             .padding()
         }

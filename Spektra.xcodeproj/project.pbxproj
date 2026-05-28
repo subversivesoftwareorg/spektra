@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B1C2D3E4F5A6B7C8D9E0F1A2 /* ADSBDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E3F4A5B6C7D8E9F0A1B2 /* ADSBDecoder.swift */; };
+		E2F3A4B5C6D7E8F9A0B1C2D3 /* POCSAGDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A3B4C5D6E7F8A9B0C1D2E3 /* POCSAGDecoder.swift */; };
+		A4B5C6D7E8F9A0B1C2D3E4F5 /* DecodersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C5D6E7F8A9B0C1D2E3F4A5 /* DecodersView.swift */; };
+		C5D6E7F8A9B0C1D2E3F4A5B6 /* AircraftMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E6F7A8B9C0D1E2F3A4B5C6 /* AircraftMapView.swift */; };
 		0AC5685D47B2C0F38C9CFA2E /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF5188BE3D6DC369CB426CF /* MainTabView.swift */; };
 		129DDA87CE421B1353DA9053 /* SDRDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2477E1AEFE25D0FF6D02AABB /* SDRDashboardView.swift */; };
 		2C57788C038A46A858B00155 /* RTLSDRDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE136C21B8462DDA594FEC3 /* RTLSDRDevice.swift */; };
@@ -16,11 +20,31 @@
 		76297AF4945AB171EAD20DD9 /* SDRAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D0F21D28D5C2ADA219242D /* SDRAudioEngine.swift */; };
 		79FE59E441A74F816767F31D /* GetSDRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000EAEB43CA38607FF319F74 /* GetSDRView.swift */; };
 		C7CEAD3D8D98B52A2CAD2F66 /* SignalClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E689607DEA73A797636CAA1 /* SignalClassifier.swift */; };
+		D8F2A4C6E1B3590F7A2D4E81 /* SignalLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D7B1E5F9C2480D6A1E3B70 /* SignalLogView.swift */; };
+		E1C4D7A3B9F2680E5A31C7D2 /* SignalFinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A3E9D1C4F2580A6E31B9D0 /* SignalFinderView.swift */; };
 		CA4FEDFAF57EDF71018639D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C9A702BFD0768D984EC18D5 /* Assets.xcassets */; };
 		F42708590F7D16ECF6010A66 /* SpektraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081DD4AC629AB8C53C224B49 /* SpektraApp.swift */; };
+		AA0000000000000000000E0D /* ADSBDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000E0B /* ADSBDecoderTests.swift */; };
+		AA0000000000000000000E0E /* POCSAGDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000E0C /* POCSAGDecoderTests.swift */; };
+		BB0000000000000000000F01 /* ProtocolScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000F03 /* ProtocolScanner.swift */; };
+		BB0000000000000000000F02 /* ProtocolScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000F04 /* ProtocolScannerView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		AA0000000000000000000E09 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22BC19AFE2E41D11EAB9B152 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3AC192947DB2FAD63AFCCAEB;
+			remoteInfo = Spektra;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		C1D2E3F4A5B6C7D8E9F0A1B2 /* ADSBDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ADSBDecoder.swift; sourceTree = "<group>"; };
+		F2A3B4C5D6E7F8A9B0C1D2E3 /* POCSAGDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POCSAGDecoder.swift; sourceTree = "<group>"; };
+		D5E6F7A8B9C0D1E2F3A4B5C6 /* AircraftMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AircraftMapView.swift; sourceTree = "<group>"; };
+		B4C5D6E7F8A9B0C1D2E3F4A5 /* DecodersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodersView.swift; sourceTree = "<group>"; };
 		000EAEB43CA38607FF319F74 /* GetSDRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSDRView.swift; sourceTree = "<group>"; };
 		081DD4AC629AB8C53C224B49 /* SpektraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpektraApp.swift; sourceTree = "<group>"; };
 		0AE136C21B8462DDA594FEC3 /* RTLSDRDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTLSDRDevice.swift; sourceTree = "<group>"; };
@@ -30,13 +54,27 @@
 		5C9A702BFD0768D984EC18D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6BBBAEDAE492361859A9FE19 /* SDRHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDRHelpView.swift; sourceTree = "<group>"; };
 		A0AD1061D5F0C6CA3ED650EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A3D7B1E5F9C2480D6A1E3B70 /* SignalLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalLogView.swift; sourceTree = "<group>"; };
+		B7A3E9D1C4F2580A6E31B9D0 /* SignalFinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalFinderView.swift; sourceTree = "<group>"; };
 		CBEEF4684192BE121E152FAB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D9D0F21D28D5C2ADA219242D /* SDRAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDRAudioEngine.swift; sourceTree = "<group>"; };
 		EEF5188BE3D6DC369CB426CF /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000F03 /* ProtocolScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolScanner.swift; sourceTree = "<group>"; };
+		BB0000000000000000000F04 /* ProtocolScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolScannerView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000E02 /* SpektraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpektraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0000000000000000000E0B /* ADSBDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ADSBDecoderTests.swift; sourceTree = "<group>"; };
+		AA0000000000000000000E0C /* POCSAGDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POCSAGDecoderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		FF76644469CE368D62BA827C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA0000000000000000000E04 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -67,6 +105,9 @@
 		2902B33684C2214196FCB7E1 /* SDR */ = {
 			isa = PBXGroup;
 			children = (
+				C1D2E3F4A5B6C7D8E9F0A1B2 /* ADSBDecoder.swift */,
+				F2A3B4C5D6E7F8A9B0C1D2E3 /* POCSAGDecoder.swift */,
+				BB0000000000000000000F03 /* ProtocolScanner.swift */,
 				0AE136C21B8462DDA594FEC3 /* RTLSDRDevice.swift */,
 				D9D0F21D28D5C2ADA219242D /* SDRAudioEngine.swift */,
 				2E689607DEA73A797636CAA1 /* SignalClassifier.swift */,
@@ -77,9 +118,14 @@
 		3126B33B264F0580B6B7D834 /* SDR */ = {
 			isa = PBXGroup;
 			children = (
+				D5E6F7A8B9C0D1E2F3A4B5C6 /* AircraftMapView.swift */,
+				B4C5D6E7F8A9B0C1D2E3F4A5 /* DecodersView.swift */,
 				000EAEB43CA38607FF319F74 /* GetSDRView.swift */,
+				BB0000000000000000000F04 /* ProtocolScannerView.swift */,
 				2477E1AEFE25D0FF6D02AABB /* SDRDashboardView.swift */,
 				6BBBAEDAE492361859A9FE19 /* SDRHelpView.swift */,
+				A3D7B1E5F9C2480D6A1E3B70 /* SignalLogView.swift */,
+				B7A3E9D1C4F2580A6E31B9D0 /* SignalFinderView.swift */,
 			);
 			path = SDR;
 			sourceTree = "<group>";
@@ -88,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				49924E4FFB2A6846EE90CB4B /* Spektra.app */,
+				AA0000000000000000000E02 /* SpektraTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -116,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				BDEACC0BBD2CA548AC307E7B /* Spektra */,
+				AA0000000000000000000E0A /* SpektraTests */,
 				586803EF3EEDDB6484551736 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -126,6 +174,15 @@
 				2902B33684C2214196FCB7E1 /* SDR */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000E0A /* SpektraTests */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000E0B /* ADSBDecoderTests.swift */,
+				AA0000000000000000000E0C /* POCSAGDecoderTests.swift */,
+			);
+			path = SpektraTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,6 +207,25 @@
 			productReference = 49924E4FFB2A6846EE90CB4B /* Spektra.app */;
 			productType = "com.apple.product-type.application";
 		};
+		AA0000000000000000000E01 /* SpektraTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000000E05 /* Build configuration list for PBXNativeTarget "SpektraTests" */;
+			buildPhases = (
+				AA0000000000000000000E03 /* Sources */,
+				AA0000000000000000000E04 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA0000000000000000000E08 /* PBXTargetDependency */,
+			);
+			name = SpektraTests;
+			packageProductDependencies = (
+			);
+			productName = SpektraTests;
+			productReference = AA0000000000000000000E02 /* SpektraTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -161,6 +237,10 @@
 				TargetAttributes = {
 					3AC192947DB2FAD63AFCCAEB = {
 						ProvisioningStyle = Automatic;
+					};
+					AA0000000000000000000E01 = {
+						ProvisioningStyle = Automatic;
+						TestTargetID = 3AC192947DB2FAD63AFCCAEB;
 					};
 				};
 			};
@@ -179,6 +259,7 @@
 			projectRoot = "";
 			targets = (
 				3AC192947DB2FAD63AFCCAEB /* Spektra */,
+				AA0000000000000000000E01 /* SpektraTests */,
 			);
 		};
 /* End PBXProject section */
@@ -206,13 +287,38 @@
 				76297AF4945AB171EAD20DD9 /* SDRAudioEngine.swift in Sources */,
 				129DDA87CE421B1353DA9053 /* SDRDashboardView.swift in Sources */,
 				6218DA66DB481D07EF3EFD16 /* SDRHelpView.swift in Sources */,
+				D8F2A4C6E1B3590F7A2D4E81 /* SignalLogView.swift in Sources */,
+				E1C4D7A3B9F2680E5A31C7D2 /* SignalFinderView.swift in Sources */,
 				323656FD977D74F4C8C815AA /* SettingsView.swift in Sources */,
+				B1C2D3E4F5A6B7C8D9E0F1A2 /* ADSBDecoder.swift in Sources */,
+				E2F3A4B5C6D7E8F9A0B1C2D3 /* POCSAGDecoder.swift in Sources */,
+				C5D6E7F8A9B0C1D2E3F4A5B6 /* AircraftMapView.swift in Sources */,
+				A4B5C6D7E8F9A0B1C2D3E4F5 /* DecodersView.swift in Sources */,
 				C7CEAD3D8D98B52A2CAD2F66 /* SignalClassifier.swift in Sources */,
+				BB0000000000000000000F01 /* ProtocolScanner.swift in Sources */,
+				BB0000000000000000000F02 /* ProtocolScannerView.swift in Sources */,
 				F42708590F7D16ECF6010A66 /* SpektraApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA0000000000000000000E03 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000000000000000000E0D /* ADSBDecoderTests.swift in Sources */,
+				AA0000000000000000000E0E /* POCSAGDecoderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA0000000000000000000E08 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3AC192947DB2FAD63AFCCAEB /* Spektra */;
+			targetProxy = AA0000000000000000000E09 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1E3A2E623B380B42FBBC6209 /* Debug */ = {
@@ -382,6 +488,38 @@
 			};
 			name = Release;
 		};
+		AA0000000000000000000E06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = /opt/homebrew/include;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.subversivesoftware.SpektraTests;
+				SDKROOT = macosx;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/CRtlSdr";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spektra.app/Contents/MacOS/Spektra";
+			};
+			name = Debug;
+		};
+		AA0000000000000000000E07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = /opt/homebrew/include;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.subversivesoftware.SpektraTests;
+				SDKROOT = macosx;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/CRtlSdr";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spektra.app/Contents/MacOS/Spektra";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -399,6 +537,15 @@
 			buildConfigurations = (
 				CA4C3559396242A8B52C6B26 /* Debug */,
 				9A075199B2BB5810E922129E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AA0000000000000000000E05 /* Build configuration list for PBXNativeTarget "SpektraTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000E06 /* Debug */,
+				AA0000000000000000000E07 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

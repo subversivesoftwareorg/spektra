@@ -53,6 +53,38 @@ final class RTLSDRDevice: NSObject {
         }
     }
 
+    struct ScanBand: Identifiable {
+        let id = UUID()
+        let name: String
+        let icon: String
+        let startFrequency: UInt32
+        let endFrequency: UInt32
+
+        var rangeMHz: String {
+            let start = Double(startFrequency) / 1_000_000.0
+            let end = Double(endFrequency) / 1_000_000.0
+            return String(format: "%.1f – %.1f MHz", start, end)
+        }
+
+        var stepFrequencies: [UInt32] {
+            let stepSize: UInt32 = 2_000_000
+            let bandWidth = endFrequency - startFrequency
+            if bandWidth <= stepSize {
+                return [(startFrequency + endFrequency) / 2]
+            }
+            var freqs: [UInt32] = []
+            var f = startFrequency + stepSize / 2
+            while f < endFrequency {
+                freqs.append(f)
+                f += stepSize
+            }
+            if let last = freqs.last, last + stepSize / 2 < endFrequency {
+                freqs.append(endFrequency - stepSize / 2)
+            }
+            return freqs
+        }
+    }
+
     enum TuningStep: Double, CaseIterable, Identifiable {
         case khz1   = 1000
         case khz10  = 10000
@@ -108,6 +140,51 @@ final class RTLSDRDevice: NSObject {
     let audioEngine = SDRAudioEngine()
     var listeningFrequencyMHz: Double?
 
+    // Sweep
+    private(set) var isSweeping = false
+    private(set) var sweepBand: ScanBand?
+    private(set) var sweepProgress: Double = 0
+    private(set) var sweepSignals: [DetectedSignal] = []
+    private var sweepTimer: Timer?
+    private var sweepStepIndex: Int = 0
+    private var sweepPendingSignals: [DetectedSignal] = []
+    private var sweepPassCount: Int = 0
+    private var sweepSignalHistory: [String: SweepSignalEntry] = [:]
+
+    private struct SweepSignalEntry {
+        var signal: DetectedSignal
+        var smoothedPower: Float
+        var lastSeenPass: Int
+    }
+
+    struct SignalLogEntry: Identifiable {
+        let id = UUID()
+        let frequencyMHz: Double
+        var bestPowerDB: Float
+        var latestPowerDB: Float
+        var fingerprint: SignalFingerprint
+        var firstSeen: Date
+        var lastSeen: Date
+        var hitCount: Int
+        var bandName: String?
+
+        var frequencyLabel: String {
+            String(format: "%.4f MHz", frequencyMHz)
+        }
+    }
+
+    // Signal log (persistent across sweeps within a session)
+    private(set) var sessionSignalLog: [SignalLogEntry] = []
+    private var signalLogMap: [String: SignalLogEntry] = [:]
+
+    // Protocol decoders
+    let pocsagDecoder = POCSAGDecoder()
+    let adsbDecoder = ADSBDecoder()
+
+    // Protocol scanner
+    let protocolScanner = ProtocolScanner()
+    var isProtocolScanActive = false
+
     // Signal classifier
     private let signalClassifier = SignalClassifier()
 
@@ -132,11 +209,23 @@ final class RTLSDRDevice: NSObject {
         FrequencyPreset(name: "GPS L1", frequency: 1_575_420_000, icon: "location.circle"),
     ]
 
+    static let scanBands: [ScanBand] = [
+        ScanBand(name: "FM Broadcast", icon: "radio", startFrequency: 87_500_000, endFrequency: 108_500_000),
+        ScanBand(name: "Aviation", icon: "airplane.departure", startFrequency: 117_500_000, endFrequency: 137_500_000),
+        ScanBand(name: "VHF", icon: "antenna.radiowaves.left.and.right", startFrequency: 143_000_000, endFrequency: 174_000_000),
+        ScanBand(name: "UHF", icon: "walkie.talkie.radio", startFrequency: 430_000_000, endFrequency: 470_000_000),
+        ScanBand(name: "800 MHz", icon: "antenna.radiowaves.left.and.right.circle", startFrequency: 850_000_000, endFrequency: 870_000_000),
+        ScanBand(name: "900 MHz", icon: "sensor.fill", startFrequency: 895_000_000, endFrequency: 935_000_000),
+        ScanBand(name: "ADS-B", icon: "airplane", startFrequency: 1_088_000_000, endFrequency: 1_092_000_000),
+        ScanBand(name: "NOAA Weather", icon: "cloud.sun", startFrequency: 162_000_000, endFrequency: 163_000_000),
+    ]
+
     // MARK: - Internals
 
     private var device: OpaquePointer?
     private var pollTimer: Timer?
     private var streamQueue = DispatchQueue(label: "com.spektra.sdr.stream", qos: .userInitiated)
+    private var deviceQueue = DispatchQueue(label: "com.spektra.sdr.device", qos: .userInitiated)
     private var retainedSelf: Unmanaged<RTLSDRDevice>?
 
     private let fftSize = 2048
@@ -144,7 +233,7 @@ final class RTLSDRDevice: NSObject {
     private var window: [Float] = []
 
     private var spectrumAccumulator: [Float] = []
-    private var spectrumFrameCount: Int = 0
+    private(set) var spectrumFrameCount: Int = 0
 
     // Track max power for squelch reference
     private var currentMaxPower: Float = -100
@@ -271,6 +360,7 @@ final class RTLSDRDevice: NSObject {
     }
 
     func disconnect() {
+        stopSweep()
         stopStreaming()
         audioEngine.stop()
         if let dev = device {
@@ -294,6 +384,9 @@ final class RTLSDRDevice: NSObject {
         }
         device = nil
         DispatchQueue.main.async { [weak self] in
+            self?.sweepTimer?.invalidate()
+            self?.sweepTimer = nil
+            self?.isSweeping = false
             self?.isStreaming = false
             self?.connectionState = .disconnected
             self?.deviceInfo = DeviceInfo()
@@ -308,27 +401,41 @@ final class RTLSDRDevice: NSObject {
 
     private func applyCenterFrequency() {
         guard let dev = device else { return }
-        rtlsdr_set_center_freq(dev, centerFrequency)
+        let freq = centerFrequency
+        deviceQueue.async {
+            rtlsdr_set_center_freq(dev, freq)
+        }
     }
 
     private func applySampleRate() {
         guard let dev = device else { return }
+        let rate = sampleRate
         let wasStreaming = isStreaming
         if wasStreaming { stopStreaming() }
-        rtlsdr_set_sample_rate(dev, sampleRate)
-        if wasStreaming { startStreaming() }
+        deviceQueue.async { [weak self] in
+            rtlsdr_set_sample_rate(dev, rate)
+            if wasStreaming {
+                DispatchQueue.main.async { self?.startStreaming() }
+            }
+        }
     }
 
     private func applyGainMode() {
         guard let dev = device else { return }
-        rtlsdr_set_tuner_gain_mode(dev, isAutoGain ? 0 : 1)
-        if !isAutoGain { applyGain() }
+        let autoGain = isAutoGain
+        deviceQueue.async { [weak self] in
+            rtlsdr_set_tuner_gain_mode(dev, autoGain ? 0 : 1)
+            if !autoGain { self?.applyGain() }
+        }
     }
 
     private func applyGain() {
         guard let dev = device, !isAutoGain, !availableGains.isEmpty else { return }
         let index = min(manualGainIndex, availableGains.count - 1)
-        rtlsdr_set_tuner_gain(dev, availableGains[index])
+        let gain = availableGains[index]
+        deviceQueue.async {
+            rtlsdr_set_tuner_gain(dev, gain)
+        }
     }
 
     var currentGainDB: Double {
@@ -389,6 +496,147 @@ final class RTLSDRDevice: NSObject {
         return (center - halfBW, center + halfBW)
     }
 
+    // MARK: - Band Sweep
+
+    func startSweep(band: ScanBand) {
+        sweepTimer?.invalidate()
+        sweepTimer = nil
+        stopListening()
+
+        sweepBand = band
+        sweepStepIndex = 0
+        sweepPendingSignals = []
+        sweepPassCount = 0
+        sweepSignalHistory = [:]
+        sweepProgress = 0
+        isSweeping = true
+
+        let steps = band.stepFrequencies
+        guard !steps.isEmpty else { return }
+
+        centerFrequency = steps[0]
+
+        if !isStreaming {
+            startStreaming()
+        }
+
+        sweepTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
+            self?.advanceSweep()
+        }
+        sweepTimer?.tolerance = 0.05
+    }
+
+    func stopSweep() {
+        sweepTimer?.invalidate()
+        sweepTimer = nil
+        isSweeping = false
+    }
+
+    private func advanceSweep() {
+        guard let band = sweepBand else { return }
+        let steps = band.stepFrequencies
+        guard !steps.isEmpty, spectrumFrameCount >= 8 else { return }
+
+        sweepPendingSignals.append(contentsOf: detectedSignals)
+
+        sweepStepIndex += 1
+        if sweepStepIndex >= steps.count {
+            mergeSweepResults(deduplicateSignals(sweepPendingSignals))
+            sweepPendingSignals = []
+            sweepStepIndex = 0
+        }
+
+        sweepProgress = Double(sweepStepIndex) / Double(steps.count)
+        centerFrequency = steps[sweepStepIndex]
+    }
+
+    private func deduplicateSignals(_ signals: [DetectedSignal]) -> [DetectedSignal] {
+        guard !signals.isEmpty else { return [] }
+        var result: [DetectedSignal] = []
+        let sorted = signals.sorted { $0.frequencyMHz < $1.frequencyMHz }
+        for signal in sorted {
+            if let lastIdx = result.indices.last,
+               abs(result[lastIdx].frequencyMHz - signal.frequencyMHz) < 0.2 {
+                if signal.powerDB > result[lastIdx].powerDB {
+                    result[lastIdx] = signal
+                }
+            } else {
+                result.append(signal)
+            }
+        }
+        return result
+    }
+
+    func logSignals(_ signals: [DetectedSignal], bandName: String? = nil) {
+        let now = Date()
+        for signal in signals {
+            let key = String(format: "%.2f", (signal.frequencyMHz * 20).rounded() / 20)
+            if var existing = signalLogMap[key] {
+                existing.lastSeen = now
+                existing.hitCount += 1
+                existing.latestPowerDB = signal.powerDB
+                if signal.powerDB > existing.bestPowerDB {
+                    existing.bestPowerDB = signal.powerDB
+                }
+                existing.fingerprint = signal.fingerprint
+                if existing.bandName == nil, let bandName {
+                    existing.bandName = bandName
+                }
+                signalLogMap[key] = existing
+            } else {
+                signalLogMap[key] = SignalLogEntry(
+                    frequencyMHz: signal.frequencyMHz,
+                    bestPowerDB: signal.powerDB,
+                    latestPowerDB: signal.powerDB,
+                    fingerprint: signal.fingerprint,
+                    firstSeen: now,
+                    lastSeen: now,
+                    hitCount: 1,
+                    bandName: bandName
+                )
+            }
+        }
+        sessionSignalLog = signalLogMap.values.sorted { $0.frequencyMHz < $1.frequencyMHz }
+    }
+
+    func clearSignalLog() {
+        signalLogMap = [:]
+        sessionSignalLog = []
+    }
+
+    private func mergeSweepResults(_ newSignals: [DetectedSignal]) {
+        sweepPassCount += 1
+
+        logSignals(newSignals, bandName: sweepBand?.name)
+
+        for signal in newSignals {
+            let key = String(format: "%.2f", (signal.frequencyMHz * 20).rounded() / 20)
+            if var existing = sweepSignalHistory[key] {
+                existing.smoothedPower = 0.5 * signal.powerDB + 0.5 * existing.smoothedPower
+                existing.signal = DetectedSignal(
+                    id: signal.id,
+                    frequencyMHz: signal.frequencyMHz,
+                    powerDB: existing.smoothedPower,
+                    fingerprint: signal.fingerprint
+                )
+                existing.lastSeenPass = sweepPassCount
+                sweepSignalHistory[key] = existing
+            } else {
+                sweepSignalHistory[key] = SweepSignalEntry(
+                    signal: signal,
+                    smoothedPower: signal.powerDB,
+                    lastSeenPass: sweepPassCount
+                )
+            }
+        }
+
+        sweepSignalHistory = sweepSignalHistory.filter {
+            $0.value.lastSeenPass >= sweepPassCount - 3
+        }
+
+        sweepSignals = sweepSignalHistory.values.map(\.signal)
+    }
+
     // MARK: - Streaming
 
     func startStreaming() {
@@ -438,6 +686,14 @@ final class RTLSDRDevice: NSObject {
         // --- Audio: forward ALL IQ data to audio engine ---
         if audioEngine.isPlaying {
             audioEngine.processIQ(buf, length: length, signalPowerDB: currentMaxPower)
+        }
+
+        // --- Protocol decoders ---
+        if pocsagDecoder.isActive {
+            pocsagDecoder.processIQ(buf, length: length)
+        }
+        if adsbDecoder.isActive {
+            adsbDecoder.processIQ(buf, length: length)
         }
 
         // --- Spectrum FFT: use the LAST fftSize IQ pairs for freshest data ---

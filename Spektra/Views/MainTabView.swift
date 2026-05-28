@@ -3,20 +3,61 @@ import SwiftUI
 struct MainTabView: View {
     @State private var sdrDevice = RTLSDRDevice()
     @State private var showOnboarding = false
+    @State private var selectedTab = 0
 
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var body: some View {
-        SDRDashboardView()
-            .environment(sdrDevice)
-            .sheet(isPresented: $showOnboarding) {
-                OnboardingView(isPresented: $showOnboarding)
-            }
-            .onAppear {
-                if !hasCompletedOnboarding {
-                    showOnboarding = true
+        TabView(selection: $selectedTab) {
+            SignalFinderView()
+                .tabItem {
+                    Label("Signal Finder", systemImage: "magnifyingglass.circle")
                 }
+                .tag(0)
+
+            ProtocolScannerView()
+                .tabItem {
+                    Label("Protocol Scanner", systemImage: "dot.radiowaves.up.forward")
+                }
+                .tag(1)
+
+            SignalLogView(selectedTab: $selectedTab)
+                .tabItem {
+                    Label("Signal Log", systemImage: "list.bullet.clipboard")
+                }
+                .tag(2)
+
+            SDRDashboardView(selectedTab: $selectedTab)
+                .tabItem {
+                    Label("Expert Tuner", systemImage: "waveform")
+                }
+                .tag(3)
+
+            DecodersView()
+                .tabItem {
+                    Label("Decoders", systemImage: "waveform.badge.magnifyingglass")
+                }
+                .tag(4)
+
+            AircraftMapView()
+                .tabItem {
+                    Label("Aircraft", systemImage: "airplane.circle")
+                }
+                .tag(5)
+        }
+        .environment(sdrDevice)
+        .onAppear {
+            sdrDevice.startPolling()
+            if !hasCompletedOnboarding {
+                showOnboarding = true
             }
+        }
+        .onDisappear {
+            sdrDevice.stopPolling()
+        }
+        .sheet(isPresented: $showOnboarding) {
+            OnboardingView(isPresented: $showOnboarding)
+        }
     }
 }
 

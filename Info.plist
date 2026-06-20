@@ -11,10 +11,14 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>10</string>
+	<string>11</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SUFeedURL</key>
+	<string>https://subversivesoftware.org/updates/spektra/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>o8LVWN856eET9FIPLD7qHGEDu6+7s9amIf+TH2pIEHs=</string>
 </dict>
 </plist>

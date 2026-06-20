@@ -119,24 +119,41 @@ if [ -n "$RTLSDR_LIB" ]; then
     install_name_tool -id "@executable_path/../Frameworks/librtlsdr.dylib" "$FRAMEWORKS_DIR/librtlsdr.dylib"
 fi
 
-# ── Code signing ──────────────────────────────────────────────────
+# ── Code signing (deep sign Sparkle first, then dylibs, then app) ─
 if [ -n "$IDENTITY" ]; then
     echo "==> Signing with: $IDENTITY"
+
+    # Deep-sign Sparkle framework (required for notarization)
+    SPARKLE_FW="$APP_PATH/Contents/Frameworks/Sparkle.framework"
+    if [ -d "$SPARKLE_FW" ]; then
+        echo "    Signing Sparkle XPC services..."
+        for xpc in "$SPARKLE_FW"/Versions/B/XPCServices/*.xpc; do
+            [ -e "$xpc" ] && codesign --force --options runtime --sign "$IDENTITY" --timestamp "$xpc"
+        done
+        echo "    Signing Sparkle helper apps..."
+        for app in "$SPARKLE_FW"/Versions/B/*.app; do
+            [ -e "$app" ] && codesign --force --options runtime --sign "$IDENTITY" --timestamp "$app"
+        done
+        if [ -f "$SPARKLE_FW/Versions/B/Autoupdate" ]; then
+            codesign --force --options runtime --sign "$IDENTITY" --timestamp "$SPARKLE_FW/Versions/B/Autoupdate"
+        fi
+        codesign --force --options runtime --sign "$IDENTITY" --timestamp "$SPARKLE_FW"
+    fi
+
+    # Sign embedded dylibs (librtlsdr, libusb)
     if [ -d "$APP_PATH/Contents/Frameworks" ]; then
         find "$APP_PATH/Contents/Frameworks" -type f \( -name "*.dylib" -o -name "*.so" \) | while read -r lib; do
             codesign --force --options runtime --sign "$IDENTITY" --timestamp "$lib"
         done
-        find "$APP_PATH/Contents/Frameworks" -type d -name "*.framework" | while read -r fw; do
-            codesign --force --options runtime --sign "$IDENTITY" --timestamp "$fw"
-        done
     fi
+
     codesign --force --options runtime \
         --sign "$IDENTITY" \
         --timestamp \
         --entitlements "$PROJECT_DIR/Spektra.entitlements" \
         "$APP_PATH"
     echo "==> Verifying signature..."
-    codesign --verify --verbose=2 "$APP_PATH"
+    codesign --verify --verbose=2 --deep "$APP_PATH"
     echo "    Signature OK"
 fi
 
@@ -206,6 +223,27 @@ if [ "$SKIP_NOTARIZE" = false ] && [ -n "$IDENTITY" ]; then
     fi
 fi
 
+# ── Sparkle zip ──────────────────────────────────────────────────
+SPARKLE_DIR="$BUILD_DIR/sparkle"
+ZIP_NAME="${APP_NAME}-${VERSION}-b${NEW_BUILD}.zip"
+ZIP_PATH="$SPARKLE_DIR/$ZIP_NAME"
+echo "==> Creating Sparkle update zip..."
+rm -rf "$SPARKLE_DIR"
+mkdir -p "$SPARKLE_DIR"
+ditto -c -k --keepParent "$APP_PATH" "$ZIP_PATH"
+
+# ── Generate appcast ─────────────────────────────────────────────
+GENERATE_APPCAST=$(find "$PROJECT_DIR/.build/artifacts" "$DERIVED_DATA/SourcePackages/artifacts" \
+    "$HOME/Library/Developer/Xcode/DerivedData"/Spektra-*/SourcePackages/artifacts \
+    -name "generate_appcast" -type f 2>/dev/null | head -1)
+if [ -n "$GENERATE_APPCAST" ] && [ -x "$GENERATE_APPCAST" ]; then
+    echo "==> Generating appcast.xml..."
+    "$GENERATE_APPCAST" "$SPARKLE_DIR"
+else
+    echo "WARNING: generate_appcast not found"
+    echo "Run: xcodebuild -project $APP_NAME.xcodeproj -scheme $APP_NAME -resolvePackageDependencies"
+fi
+
 # ── Cleanup ──────────────────────────────────────────────────────
 rm -rf "$STAGING_DIR"
 
@@ -229,8 +267,42 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     git commit -m "Build $NEW_BUILD for v$VERSION distribution" 2>/dev/null || true
     git tag -a "$TAG" -m "$APP_NAME $VERSION build $NEW_BUILD"
     echo "  Tagged: $TAG"
-    echo ""
-    echo "Push with: git push && git push --tags"
+    git push && git push --tags
+fi
+
+# ── GitHub release ───────────────────────────────────────────────
+if command -v gh >/dev/null 2>&1; then
+    echo "==> Creating GitHub release $TAG..."
+    PREV_TAG=$(git tag --sort=-v:refname | grep -v "^$TAG$" | head -1 || true)
+    if [ -n "$PREV_TAG" ]; then
+        RELEASE_NOTES=$(git log --pretty=format:"- %s" "$PREV_TAG".."$TAG" -- . ':!Info.plist' \
+            | grep -v "^- Build [0-9]" || true)
+    else
+        RELEASE_NOTES="Initial release"
+    fi
+    gh release create "$TAG" "$DMG_PATH" "$ZIP_PATH" \
+        --title "$APP_NAME $VERSION (build $NEW_BUILD)" \
+        --notes "$RELEASE_NOTES"
+
+    # Rewrite appcast enclosure URL to point at the GitHub Release zip
+    APPCAST_FILE="$SPARKLE_DIR/appcast.xml"
+    if [ -f "$APPCAST_FILE" ]; then
+        GITHUB_URL="https://github.com/subversivesoftwareorg/spektra/releases/download/$TAG/$ZIP_NAME"
+        sed -i '' "s|url=\"[^\"]*${ZIP_NAME}\"|url=\"${GITHUB_URL}\"|g" "$APPCAST_FILE"
+
+        # Stage appcast to website
+        WWW_UPDATES="$PROJECT_DIR/../www/static/updates/spektra"
+        if [ -d "$PROJECT_DIR/../www" ]; then
+            mkdir -p "$WWW_UPDATES"
+            cp "$APPCAST_FILE" "$WWW_UPDATES/appcast.xml"
+            echo "==> Appcast staged to $WWW_UPDATES/appcast.xml"
+            echo ""
+            echo "Deploy website:"
+            echo "  cd ../www && git add -A && git commit -m 'Spektra $VERSION build $NEW_BUILD' && git push"
+        fi
+    fi
 else
-    echo "Not in a git repo — skipping tag."
+    echo ""
+    echo "Install gh CLI for automatic GitHub releases: brew install gh"
+    echo "Sparkle zip available at: $ZIP_PATH"
 fi

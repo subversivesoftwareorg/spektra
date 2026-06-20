@@ -28,6 +28,7 @@
 		AA0000000000000000000E0E /* POCSAGDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000E0C /* POCSAGDecoderTests.swift */; };
 		BB0000000000000000000F01 /* ProtocolScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000F03 /* ProtocolScanner.swift */; };
 		BB0000000000000000000F02 /* ProtocolScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000F04 /* ProtocolScannerView.swift */; };
+		CC0000000000000000000004 /* CheckForUpdatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0000000000000000000003 /* CheckForUpdatesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		AA0000000000000000000E02 /* SpektraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpektraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0000000000000000000E0B /* ADSBDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ADSBDecoderTests.swift; sourceTree = "<group>"; };
 		AA0000000000000000000E0C /* POCSAGDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POCSAGDecoderTests.swift; sourceTree = "<group>"; };
+		CC0000000000000000000003 /* CheckForUpdatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckForUpdatesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,9 +99,18 @@
 			children = (
 				EEF5188BE3D6DC369CB426CF /* MainTabView.swift */,
 				CBEEF4684192BE121E152FAB /* SettingsView.swift */,
+				CC0000000000000000000005 /* Components */,
 				3126B33B264F0580B6B7D834 /* SDR */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		CC0000000000000000000005 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				CC0000000000000000000003 /* CheckForUpdatesView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		2902B33684C2214196FCB7E1 /* SDR */ = {
@@ -202,6 +213,7 @@
 			);
 			name = Spektra;
 			packageProductDependencies = (
+				CC0000000000000000000002 /* Sparkle */,
 			);
 			productName = Spektra;
 			productReference = 49924E4FFB2A6846EE90CB4B /* Spektra.app */;
@@ -257,6 +269,9 @@
 			productRefGroup = 586803EF3EEDDB6484551736 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
+			packageReferences = (
+				CC0000000000000000000001 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			targets = (
 				3AC192947DB2FAD63AFCCAEB /* Spektra */,
 				AA0000000000000000000E01 /* SpektraTests */,
@@ -298,6 +313,7 @@
 				BB0000000000000000000F01 /* ProtocolScanner.swift in Sources */,
 				BB0000000000000000000F02 /* ProtocolScannerView.swift in Sources */,
 				F42708590F7D16ECF6010A66 /* SpektraApp.swift in Sources */,
+				CC0000000000000000000004 /* CheckForUpdatesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -551,6 +567,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CC0000000000000000000001 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CC0000000000000000000002 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC0000000000000000000001 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 22BC19AFE2E41D11EAB9B152 /* Project object */;
 }

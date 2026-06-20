@@ -77,16 +77,12 @@ final class ADSBDecoder {
 
     // MARK: - Constants
 
-    // Preamble at 2 Msps: 1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0 (16 samples for 8µs)
-    private static let preamble: [Bool] = [
-        true, false, true, false, false, false, false, true,
-        false, true, false, false, false, false, false, false
-    ]
+    // Preamble at 2.048 Msps: 8µs = 16.384 samples, use 16 integer samples
     private static let preambleLen = 16
     private static let bitsPerMessage = 112
-    private static let samplesPerBit = 2 // at ~2 Msps
-    private static let messageSamples = bitsPerMessage * samplesPerBit // 224
-    private static let frameSamples = preambleLen + messageSamples // 240
+    // 2,048,000 Hz / 1,000,000 bit/s = 2.048 samples per bit
+    private static let samplesPerBit: Double = 2.048
+    private static let frameSamples = preambleLen + Int(ceil(Double(bitsPerMessage) * samplesPerBit)) + 2
 
     // CRC-24 generator polynomial
     private static let crcGenerator: UInt32 = 0xFFF409
@@ -234,12 +230,14 @@ final class ADSBDecoder {
     }
 
     func detectPreamble(_ mags: [UInt32], at offset: Int) -> Bool {
-        // Check preamble pattern: high samples should exceed low samples
         let s0 = mags[offset]
         let s2 = mags[offset + 2]
         let s7 = mags[offset + 7]
         let s9 = mags[offset + 9]
         let highMin = min(min(s0, s2), min(s7, s9))
+
+        // Reject preambles below noise floor (mag² < 200 ≈ IQ amplitude of ~14/127)
+        guard highMin >= 200 else { return false }
 
         let s1 = mags[offset + 1]
         let s3 = mags[offset + 3]
@@ -247,7 +245,8 @@ final class ADSBDecoder {
         let s5 = mags[offset + 5]
         let lowMax = max(max(s1, s3), max(s4, s5))
 
-        guard highMin > lowMax else { return false }
+        // High samples must be at least 2x the low samples for reliable bit extraction
+        guard highMin > lowMax &* 2 else { return false }
 
         let s6 = mags[offset + 6]
         let s8 = mags[offset + 8]
@@ -255,7 +254,7 @@ final class ADSBDecoder {
         let s11 = mags[offset + 11]
         let lowMax2 = max(max(s6, s8), max(s10, s11))
 
-        return highMin > lowMax2
+        return highMin > lowMax2 &* 2
     }
 
     // MARK: - Message Extraction
@@ -265,7 +264,7 @@ final class ADSBDecoder {
         var bits = [UInt8](repeating: 0, count: Self.bitsPerMessage / 8)
 
         for bit in 0..<Self.bitsPerMessage {
-            let sampleIdx = dataStart + bit * Self.samplesPerBit
+            let sampleIdx = dataStart + Int(Double(bit) * Self.samplesPerBit)
             guard sampleIdx + 1 < mags.count else { return nil }
 
             // PPM: bit=1 if first half > second half

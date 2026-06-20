@@ -1,8 +1,13 @@
 import SwiftUI
+import Sparkle
 
 @main
 struct SpektraApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
+    private let updaterController = SPUStandardUpdaterController(
+        startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil
+    )
 
     @State private var showSDRHelp = false
 
@@ -17,6 +22,10 @@ struct SpektraApp: App {
                 Button("About Spektra") {
                     appDelegate.showAboutPanel(nil)
                 }
+            }
+
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesView(updater: updaterController.updater)
             }
 
             CommandGroup(replacing: .help) {
